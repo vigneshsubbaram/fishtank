@@ -1,0 +1,32 @@
+{
+  "bridge": {
+    "cuttlefish-ota": {
+      "ipaddress": "10.106.185.200/24",
+      "iprange": "10.106.185.0/24",
+      "parents": [
+        {
+          "iface": "enxc6f63813d463"
+        }
+      ]
+    }
+  },
+  "container": {
+    "ota": [
+      {
+        "bridge": "cuttlefish-ota",
+        "iface": "eth1",
+        "gateway": "10.106.185.31",
+        "ipaddress": "10.106.185.201/24"
+      }
+    ],
+    "cuttlefish": [
+      {
+        "bridge": "cuttlefish-ota",
+        "iface": "eth1",
+        "gateway": "10.106.185.31",
+        "ipaddress": "10.106.185.202/24"
+      }
+    ]
+  },
+  "vlan_translations": []
+}

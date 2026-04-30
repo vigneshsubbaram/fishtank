@@ -1,0 +1,89 @@
+services:
+  cuttlefish:
+    build:
+      context: components/cuttlefish
+      dockerfile: Dockerfile
+      args:
+        BUILD_ID: "15067704"
+        ARCH: x86_64
+        BRANCH: aosp-android13-gsi
+        TARGET_x86_64: aosp_cf_x86_64_only_phone-userdebug
+        TARGET_arm64: aosp_cf_arm64_only_phone-userdebug
+    image: cuttlefish:latest
+    container_name: cuttlefish
+    privileged: true
+    devices:
+      - /dev/kvm
+      - /dev/net/tun
+      - /dev/vhost-net
+      - /dev/vhost-vsock
+      - /dev/dri
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+      - SYS_ADMIN
+      - SYS_PTRACE
+      - MKNOD
+    security_opt:
+      - seccomp=unconfined
+    tmpfs:
+      - /tmp
+    ports:
+      - "5900:5900"
+      - "6520:6520"
+    deploy:
+      resources:
+        limits:
+          memory: 10g
+    memswap_limit: 10g
+    stdin_open: true
+    tty: true
+
+  ota-server:
+    container_name: ota
+    image: ota-server
+    build:
+      context: components/ota-server  # yamllint disable-line rule:line-length
+      tags:
+        - ota-server:container_utils_1.1.1
+    environment:
+      LEGACY: "no"  # yamllint disable-line rule:truthy
+    privileged: true
+    hostname: ota
+    depends_on:
+      - ssh_service
+
+  orchestrator:
+    container_name: orchestrator
+    image: raikou/raikou-net
+    build:
+      context: https://github.com/lgirdk/raikou-net.git#main
+      tags:
+        - raikou-net:alpine3.18-dind-ovs_2.17
+    volumes:
+      - /lib/modules:/lib/modules
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $NW_CONFIG:/root/config.json
+    privileged: true
+    pid: host
+    network_mode: host
+    hostname: orchestrator
+    depends_on:
+      - cuttlefish
+      - ota-server
+
+  ota-base:
+    image: ota-base
+    build:
+      context: https://github.com/lgirdk/raikou-net.git#main:components/lan  # yamllint disable-line rule:line-length
+      tags:
+        - ota-base:container_utils_1.1.1
+    depends_on:
+      - ssh_service
+
+  ssh_service:
+    image: raikou/ssh
+    build:
+      context: https://github.com/vigneshsubbaram/raikou-net.git#main:components/ssh  # yamllint disable-line rule:line-length
+      tags:
+        - ssh:v1.2.0
