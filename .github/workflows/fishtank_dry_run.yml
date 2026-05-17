@@ -38,13 +38,10 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository_owner }}/ssh:v1.2.0
             ghcr.io/${{ github.repository_owner }}/ssh:latest
+            ssh:v1.2.0
           cache-from: type=gha,scope=ssh
           cache-to: type=gha,mode=max,scope=ssh
 
-      - name: Pull ssh into local daemon for downstream builds
-        run: |
-          docker pull ghcr.io/${{ github.repository_owner }}/ssh:v1.2.0
-          docker tag ghcr.io/${{ github.repository_owner }}/ssh:v1.2.0 ssh:v1.2.0
 
       - name: Build ota-base (dry run)
         run: |
