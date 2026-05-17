@@ -35,12 +35,21 @@ jobs:
         with:
           context: "https://github.com/vigneshsubbaram/raikou-net.git#main:components/ssh"
           push: false
-          tags: ssh:v1.2.0
+          tags: |
+              ghcr.io/${{ github.repository_owner }}/ssh:v1.2.0
+              ghcr.io/${{ github.repository_owner }}/ssh:latest
           cache-from: type=gha,scope=ssh
+
+      - name: Pull ssh into local daemon for downstream builds
+        run: |
+          docker pull ghcr.io/${{ github.repository_owner }}/ssh:v1.2.0
+          docker tag ghcr.io/${{ github.repository_owner }}/ssh:v1.2.0 ssh:v1.2.0
+          docker tag ghcr.io/${{ github.repository_owner }}/ssh:v1.2.0 ssh:v1.2.0
 
       - name: Build ota-base (dry run)
         run: |
           docker compose build ota-base
+          docker tag ota-base ghcr.io/${{ github.repository_owner }}/ota-base:container_utils_1.1.1
 
       - name: Build ota-server (dry run)
         run: |
