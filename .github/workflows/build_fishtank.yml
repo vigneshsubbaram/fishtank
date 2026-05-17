@@ -79,7 +79,6 @@
               COMPOSE_DOCKER_CLI_BUILD: 0
           run: |
               docker compose build --no-cache mtt
-              docker tag mtt ghcr.io/${{ github.repository_owner }}/mtt-ssh:prod
               docker push ghcr.io/${{ github.repository_owner }}/mtt-ssh:prod
 
         - name: Build orchestrator
