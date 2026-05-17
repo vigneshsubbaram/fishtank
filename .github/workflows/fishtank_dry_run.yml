@@ -1,0 +1,56 @@
+name: Fishtank Dry Run
+
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+
+concurrency:
+  group: pr-dry-run-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dry-run-build:
+    name: Dry run build of Docker images
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    env:
+      NW_CONFIG: ${{ github.workspace }}/config.json
+
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v6
+        with:
+            repository: vigneshsubbaram/fishtank
+            ref: master
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build ssh (dry run)
+        uses: docker/build-push-action@v6
+        with:
+          context: "https://github.com/vigneshsubbaram/raikou-net.git#main:components/ssh"
+          push: false
+          tags: ssh:pr-test
+          cache-from: type=gha,scope=ssh
+
+      - name: Build ota-base (dry run)
+        run: |
+          docker compose build ota-base
+
+      - name: Build ota-server (dry run)
+        run: |
+          docker compose build ota-server
+
+      - name: Build mtt (dry run)
+        run: |
+          docker compose build mtt
+
+      - name: Build orchestrator (dry run)
+        run: |
+          docker compose build orchestrator
+
