@@ -42,20 +42,31 @@ jobs:
           cache-from: type=gha,scope=ssh
           cache-to: type=gha,mode=max,scope=ssh
 
-
       - name: Build ota-base (dry run)
+        env:
+              DOCKER_BUILDKIT: 0
+              COMPOSE_DOCKER_CLI_BUILD: 0
         run: |
           docker compose build ota-base
           docker tag ota-base ghcr.io/${{ github.repository_owner }}/ota-base:container_utils_1.1.1
 
       - name: Build ota-server (dry run)
+        env:
+              DOCKER_BUILDKIT: 0
+              COMPOSE_DOCKER_CLI_BUILD: 0
         run: |
           docker compose build ota-server
 
       - name: Build mtt (dry run)
+        env:
+              DOCKER_BUILDKIT: 0
+              COMPOSE_DOCKER_CLI_BUILD: 0
         run: |
           docker compose build mtt
 
       - name: Build orchestrator (dry run)
+        env:
+              DOCKER_BUILDKIT: 0
+              COMPOSE_DOCKER_CLI_BUILD: 0
         run: |
           docker compose build orchestrator
