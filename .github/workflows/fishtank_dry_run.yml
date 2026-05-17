@@ -35,7 +35,7 @@ jobs:
         with:
           context: "https://github.com/vigneshsubbaram/raikou-net.git#main:components/ssh"
           push: false
-          tags: ssh:pr-test
+          tags: ssh:v1.2.0
           cache-from: type=gha,scope=ssh
 
       - name: Build ota-base (dry run)
