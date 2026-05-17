@@ -30,14 +30,21 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
-      - name: Build ssh (dry run)
+      - name: Build and push ssh
         uses: docker/build-push-action@v6
         with:
           context: "https://github.com/vigneshsubbaram/raikou-net.git#main:components/ssh"
           push: false
           tags: |
-              ssh:v1.2.0
+            ghcr.io/${{ github.repository_owner }}/ssh:v1.2.0
+            ghcr.io/${{ github.repository_owner }}/ssh:latest
           cache-from: type=gha,scope=ssh
+          cache-to: type=gha,mode=max,scope=ssh
+
+      - name: Pull ssh into local daemon for downstream builds
+        run: |
+          docker pull ghcr.io/${{ github.repository_owner }}/ssh:v1.2.0
+          docker tag ghcr.io/${{ github.repository_owner }}/ssh:v1.2.0 ssh:v1.2.0
 
       - name: Build ota-base (dry run)
         run: |
@@ -55,4 +62,3 @@ jobs:
       - name: Build orchestrator (dry run)
         run: |
           docker compose build orchestrator
-

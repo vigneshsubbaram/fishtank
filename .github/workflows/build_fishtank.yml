@@ -54,7 +54,6 @@
           run: |
             docker pull ghcr.io/${{ github.repository_owner }}/ssh:v1.2.0
             docker tag ghcr.io/${{ github.repository_owner }}/ssh:v1.2.0 ssh:v1.2.0
-            docker tag ghcr.io/${{ github.repository_owner }}/ssh:v1.2.0 ssh:v1.2.0
 
         - name: Build ota-base
           env:
