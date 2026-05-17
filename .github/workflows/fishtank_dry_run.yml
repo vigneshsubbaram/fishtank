@@ -37,7 +37,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
-      - name: Build and push ssh
+      - name: Build ssh
         uses: docker/build-push-action@v6
         with:
           context: "https://github.com/vigneshsubbaram/raikou-net.git#main:components/ssh"

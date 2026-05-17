@@ -14,9 +14,6 @@ RUN sed -i 's/^#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh
     && sed -i 's/.*GatewayPorts.*/GatewayPorts yes/' /etc/ssh/sshd_config \
     && sed -i 's/.*PermitTunnel.*/PermitTunnel yes/' /etc/ssh/sshd_config
 
-RUN mv /etc/profile.d/01-locale-fix.sh \
-       /etc/profile.d/01-locale-fix.sh.disabled
-
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
