@@ -6,6 +6,9 @@ services:
       dockerfile: Dockerfile
     image: ghcr.io/vigneshsubbaram/mtt-ssh:prod
     container_name: mtt
+    hostname: mtt
+    stdin_open: true
+    tty: true
     ports:
     - "8000:8000"
     - "2222:22"
@@ -14,7 +17,7 @@ services:
     environment:
     - MTT_CONTROL_SERVER_PORT=8000
     - OPERATION_MODE=on_premise
-    - IS_OMNILAB_BASED=false
+    - IS_OMNILAB_BASED=
     restart: unless-stopped
     depends_on:
     - ssh_service
